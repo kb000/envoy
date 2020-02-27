@@ -680,6 +680,19 @@ public:
   bool has(const LowerCaseString& key) const { return get(key) != nullptr; }
   void remove(const std::string& key) { remove(LowerCaseString(key)); }
 
+  std::string toString() {
+    std::stringstream s;
+    this->iterate(
+        [](const HeaderEntry& header, void* context) -> HeaderMap::Iterate {
+          std::ostream* local_os = static_cast<std::ostream*>(context);
+          *local_os << header.key().getStringView() << " " << header.value().getStringView()
+                    << std::endl;
+          return HeaderMap::Iterate::Continue;
+        },
+        &s);
+    return s.str();
+  }
+
   // HeaderMap
   bool operator==(const HeaderMap& rhs) const override { return header_map_.operator==(rhs); }
   bool operator!=(const HeaderMap& rhs) const override { return header_map_.operator!=(rhs); }

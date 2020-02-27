@@ -334,6 +334,7 @@ void Utility::sendLocalReply(
       {{Headers::get().Status, std::to_string(enumToInt(response_code))}})};
   if (!body_text.empty()) {
     response_headers->setContentLength(body_text.size());
+    // local reply gets text/plain!
     response_headers->setReferenceContentType(Headers::get().ContentTypeValues.Text);
   }
 

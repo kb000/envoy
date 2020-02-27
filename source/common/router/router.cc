@@ -435,6 +435,10 @@ Http::FilterHeadersStatus Filter::decodeHeaders(Http::RequestHeaderMap& headers,
           if (!new_path.empty() && add_location) {
             response_headers.addReferenceKey(Http::Headers::get().Location, new_path);
           }
+          // Removing content type is the wrong way to do it, since this will leave most responses bare.
+          //  We really need to default append false on content-type headers to add.
+          //  Or add special code in the router check tool's direct response path so that the tests at least reflect this reality.
+          // response_headers.removeContentType();
           direct_response->finalizeResponseHeaders(response_headers, callbacks_->streamInfo());
         },
         absl::nullopt, StreamInfo::ResponseCodeDetails::get().DirectResponse);

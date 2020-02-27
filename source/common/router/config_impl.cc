@@ -458,6 +458,7 @@ void RouteEntryImplBase::finalizeRequestHeaders(Http::HeaderMap& headers,
     vhost_.globalRouteConfig().requestHeaderParser().evaluateHeaders(headers, stream_info);
   } else {
     // Most specific mutations take precedence.
+    // Router check tool's vhost or globalRouteConfig might differ from prod.
     vhost_.globalRouteConfig().requestHeaderParser().evaluateHeaders(headers, stream_info);
     vhost_.requestHeaderParser().evaluateHeaders(headers, stream_info);
     request_headers_parser_->evaluateHeaders(headers, stream_info);
@@ -491,6 +492,7 @@ void RouteEntryImplBase::finalizeResponseHeaders(Http::HeaderMap& headers,
     vhost_.globalRouteConfig().responseHeaderParser().evaluateHeaders(headers, stream_info);
   } else {
     // Most specific mutations take precedence.
+    // Router check tool missing vhost?
     vhost_.globalRouteConfig().responseHeaderParser().evaluateHeaders(headers, stream_info);
     vhost_.responseHeaderParser().evaluateHeaders(headers, stream_info);
     response_headers_parser_->evaluateHeaders(headers, stream_info);

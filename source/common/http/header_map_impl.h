@@ -27,6 +27,7 @@ public:                                                                         
     addSize(HeaderMapImpl::appendToHeader(entry.value(), data, delimiter));                        \
     verifyByteSize();                                                                              \
   }                                                                                                \
+  /* setReferenceContentType function body is here. */                                             \
   void setReference##name(absl::string_view value) override {                                      \
     HeaderEntry& entry = maybeCreateInline(&inline_headers_.name##_, Headers::get().name);         \
     updateSize(entry.value().size(), value.size());                                                \

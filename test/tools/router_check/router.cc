@@ -145,6 +145,7 @@ bool RouterCheckTool::compareEntriesInJson(const std::string& expected_route_jso
     Envoy::StreamInfo::StreamInfoImpl stream_info(Envoy::Http::Protocol::Http11,
                                                   factory_context_->dispatcher().timeSource());
     ToolConfig tool_config = ToolConfig::create(check_config);
+    //route_ set here.
     tool_config.route_ =
         config_->route(*tool_config.headers_, stream_info, tool_config.random_value_);
     std::string test_name = check_config->getString("test_name", "");
@@ -440,7 +441,12 @@ bool RouterCheckTool::compareHeaderField(
 bool RouterCheckTool::compareHeaderField(ToolConfig& tool_config, const std::string& field,
                                          const std::string& expected) {
   std::string actual = tool_config.headers_->get_(field);
-  return compareResults(actual, expected, "check_header");
+  if (!compareResults(actual, expected, "check_header"))
+  {
+    tests_.back().second.emplace_back(tool_config.headers_->toString());
+    return false;
+  }
+  return true;
 }
 
 bool RouterCheckTool::compareCustomHeaderField(ToolConfig& tool_config, const std::string& field,
@@ -459,7 +465,13 @@ bool RouterCheckTool::compareCustomHeaderField(ToolConfig& tool_config, const st
 
     actual = tool_config.headers_->get_(field);
   }
-  return compareResults(actual, expected, "custom_header");
+
+  if (!compareResults(field + actual, field + expected, "custom_header"))
+  {
+    tests_.back().second.emplace_back(tool_config.headers_->toString());
+    return false;
+  }
+  return true;
 }
 
 bool RouterCheckTool::compareCustomHeaderField(

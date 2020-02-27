@@ -801,6 +801,7 @@ private:
 class RouteMatcher {
 public:
   RouteMatcher(const envoy::config::route::v3::RouteConfiguration& config,
+               // this is called global_route_config elsewhere.
                const ConfigImpl& global_http_config,
                Server::Configuration::ServerFactoryContext& factory_context,
                ProtobufMessage::ValidationVisitor& validator, bool validate_clusters);
